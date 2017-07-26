@@ -1,4 +1,4 @@
-"# tic-tac-toe" 
+# tic-tac-toe
  ## todo
 * there will be two types of players: registered and anonymous
 * registered users can see their previous games (games will be stored in mongodb)
