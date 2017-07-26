@@ -13,7 +13,43 @@ table {
 
     td {
         border: 1px solid black;
+        /*outline: 1px solid black;*/
         width: 100px;
         height: 100px;
+        position: relative;
     }
 
+    td.playerX::after {
+        content: '';
+        width: 10px;
+        display: block;
+        height: 100%;
+        position: relative;
+        transform: translateX(45px) rotate(-45deg);
+        border-radius: 10px;
+        background: red;
+    }
+
+    td.playerX::before {
+        content: '';
+        width: 10px;
+        display: block;
+        position: absolute;
+        height: 100%;
+        transform: translateX(45px) rotate(45deg);
+        border-radius: 10px;
+        background: red;
+    }
+
+    td.player0::after {
+        box-sizing: border-box;
+        content: '';
+        width: 70%;
+        display: block;
+        border: 10px solid green;
+        height: 70%;
+        /*position: relative;*/
+        /*background: green;*/
+        transform: translateX(calc(15% + 5px));
+        border-radius: 50%;
+    }

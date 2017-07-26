@@ -1,6 +1,5 @@
 require('./bling');
 const { getSecondaryDiagonal, getMainDiagonal, getRow, getColumn } = require('./helpers');
-const getters = [getSecondaryDiagonal, getMainDiagonal, getRow, getColumn];
 
 const board = [
     ['', '', ''],
@@ -10,7 +9,7 @@ const board = [
 
 let moves = 0;
 
-const allValuesTheSame = arr => arr.indexOf('') === -1 && new Set(arr.filter(el => el !== '')).size === 1;
+const allValuesTheSame = arr => arr.indexOf('') === -1 && new Set(arr).size === 1;
 
 function checkDiagonals(board) {
     return allValuesTheSame(getMainDiagonal(board)) || allValuesTheSame(getSecondaryDiagonal(board));
@@ -34,8 +33,11 @@ function checkWin(board) {
 
 $('td').on('click', function() {
     const [x, y] = this.getAttribute('data-pos').split('');
-    const char = ++moves % 2 ? 'X' : '0';
-    board[x][y] = char;
-    checkWin(board);
-    this.textContent = char;
+    if (board[x][y] === '') {
+        const char = ++moves % 2 ? 'X' : '0';
+        this.classList.add('player' + char);
+        board[x][y] = char;
+        checkWin(board);
+        // this.textContent = char;
+    } 
 });
