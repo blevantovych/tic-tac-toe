@@ -1,4 +1,5 @@
 # tic-tac-toe
+![game](http://prntscr.com/g0kr1y)
  ## todo
 * there will be two types of players: registered and anonymous
 * registered users can see their previous games (games will be stored in mongodb)
@@ -7,3 +8,5 @@
 * registered users as well as anonymous can create game (anyone can join to that game)
 * creator of game can choose if he plays X or 0
 * time controll
+
+### demo [here](https://bodya17.github.io/tic-tac-toe/index.html)
