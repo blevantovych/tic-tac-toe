@@ -1,11 +1,19 @@
+@import 'cross.css';
+
 * {
     padding: 0;
     margin: 0;
-
 }
 
 table {
     border-collapse: collapse;
+    width: 200px;
+    height: 200px;
+    position: relative;
+}
+
+.info {
+    text-align: center;
 }
 
 .center-table {
@@ -14,41 +22,45 @@ table {
 
     td {
         border: 1px solid black;
-        width: 100px;
-        height: 100px;
         position: relative;
-        filter: drop-shadow(1px 0px 1px rgba(0, 0, 0, .4));
     }
 
     td.playerX::after {
         content: '';
-        width: 10px;
+        width: 16%;
         display: block;
         height: 100%;
-        position: relative;
-        transform: translateX(45px) rotate(-45deg);
+        position: absolute;
+        transition: all 1s ease-in;
+        top: 0;
+        left: 42%;
+        transform: rotate(-45deg);
         border-radius: 10px;
         background: red;
     }
 
     td.playerX::before {
         content: '';
-        width: 10px;
+        width: 16%;
         display: block;
         position: absolute;
         height: 100%;
-        transform: translateX(45px) rotate(45deg);
+        top: 0;
+        left: 42%;
+        transform: rotate(45deg);
         border-radius: 10px;
         background: red;
     }
 
-    td.player0::after {
+    td.player0::before {
         box-sizing: border-box;
         content: '';
         width: 80%;
-        display: block;
-        border: 10px solid green;
         height: 80%;
-        transform: translateX(calc(10% + 5px));
+        display: block;
+        left: 10%;
+        top: 10%;
+        border: 10px solid green;
+        position: absolute;
         border-radius: 50%;
     }
