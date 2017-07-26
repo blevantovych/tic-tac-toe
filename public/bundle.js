@@ -6,6 +6,10 @@ Node.prototype.on = window.on = function (name, fn) {
   this.addEventListener(name, fn);
 }
 
+Node.prototype.off = window.off = function (name, fn) {
+  this.removeEventListener(name, fn);
+}
+
 NodeList.prototype.__proto__ = Array.prototype;
 
 NodeList.prototype.on = NodeList.prototype.addEventListener = function (name, fn) {
@@ -13,9 +17,15 @@ NodeList.prototype.on = NodeList.prototype.addEventListener = function (name, fn
     elem.on(name, fn);
   });
 }
+
+NodeList.prototype.off = NodeList.prototype.removeEventListener = function (name, fn) {
+  this.forEach(function (elem, i) {
+    elem.off(name, fn);
+  });
+}
 },{}],2:[function(require,module,exports){
-exports.getSecondaryDiagonal = twoDimArr => twoDimArr.map((el, i, arr) => twoDimArr[i][arr.length - 1 - i])
-exports.getMainDiagonal = twoDimArr => twoDimArr.map((el, i) => twoDimArr[i][i])
+exports.getSecondaryDiagonal = twoDimArr => twoDimArr.map((el, i, arr) => twoDimArr[i][arr.length - 1 - i]);
+exports.getMainDiagonal = twoDimArr => twoDimArr.map((el, i) => twoDimArr[i][i]);
 exports.getRow = (twoDimArr, rowNum) => twoDimArr[rowNum];
 exports.getColumn = (twoDimArr, colNum) => twoDimArr.map((el, i) => twoDimArr[i][colNum]);
 },{}],3:[function(require,module,exports){
@@ -37,7 +47,7 @@ function checkDiagonals(board) {
 }
 
 function checkRows(board) {
-    return board.map(allValuesTheSame).some(el => el === true)
+    return board.map(allValuesTheSame).some(el => el === true);
 }
 
 function checkColumns(board) {
@@ -45,21 +55,21 @@ function checkColumns(board) {
 }
 
 function checkWin(board) {
-    if ([checkColumns, checkRows, checkDiagonals].map(f => f(board)).some(el => el === true)) {
-        console.log('There is a winner!');
-    } else {
-        console.log('No winner yet');
-    }
+    return [checkColumns, checkRows, checkDiagonals].map(f => f(board)).some(el => el === true);
 }
 
-$('td').on('click', function() {
+$('td').on('click', function clickListener() {
     const [x, y] = this.getAttribute('data-pos').split('');
     if (board[x][y] === '') {
         const char = ++moves % 2 ? 'X' : '0';
         this.classList.add('player' + char);
         board[x][y] = char;
-        checkWin(board);
-        // this.textContent = char;
+        if (checkWin(board)) {
+            console.log(`Winner: ${char}`);
+            $('td').off('click', clickListener);
+        } else {
+            console.log('No winner yet');
+        }
     } 
 });
 

@@ -1,6 +1,7 @@
 * {
     padding: 0;
     margin: 0;
+
 }
 
 table {
@@ -13,10 +14,10 @@ table {
 
     td {
         border: 1px solid black;
-        /*outline: 1px solid black;*/
         width: 100px;
         height: 100px;
         position: relative;
+        filter: drop-shadow(1px 0px 1px rgba(0, 0, 0, .4));
     }
 
     td.playerX::after {
@@ -44,12 +45,10 @@ table {
     td.player0::after {
         box-sizing: border-box;
         content: '';
-        width: 70%;
+        width: 80%;
         display: block;
         border: 10px solid green;
-        height: 70%;
-        /*position: relative;*/
-        /*background: green;*/
-        transform: translateX(calc(15% + 5px));
+        height: 80%;
+        transform: translateX(calc(10% + 5px));
         border-radius: 50%;
     }

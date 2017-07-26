@@ -16,7 +16,7 @@ function checkDiagonals(board) {
 }
 
 function checkRows(board) {
-    return board.map(allValuesTheSame).some(el => el === true)
+    return board.map(allValuesTheSame).some(el => el === true);
 }
 
 function checkColumns(board) {
@@ -24,20 +24,20 @@ function checkColumns(board) {
 }
 
 function checkWin(board) {
-    if ([checkColumns, checkRows, checkDiagonals].map(f => f(board)).some(el => el === true)) {
-        console.log('There is a winner!');
-    } else {
-        console.log('No winner yet');
-    }
+    return [checkColumns, checkRows, checkDiagonals].map(f => f(board)).some(el => el === true);
 }
 
-$('td').on('click', function() {
+$('td').on('click', function clickListener() {
     const [x, y] = this.getAttribute('data-pos').split('');
     if (board[x][y] === '') {
         const char = ++moves % 2 ? 'X' : '0';
         this.classList.add('player' + char);
         board[x][y] = char;
-        checkWin(board);
-        // this.textContent = char;
+        if (checkWin(board)) {
+            console.log(`Winner: ${char}`);
+            $('td').off('click', clickListener);
+        } else {
+            console.log('No winner yet');
+        }
     } 
 });
