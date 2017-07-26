@@ -1,5 +1,5 @@
 # tic-tac-toe
-![game](http://prntscr.com/g0kr1y)
+![game](./game.png)
  ## todo
 * there will be two types of players: registered and anonymous
 * registered users can see their previous games (games will be stored in mongodb)
