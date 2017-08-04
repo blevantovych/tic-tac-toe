@@ -1,31 +1,42 @@
 const express = require('express')
 const path = require('path')
 const app = express()
-const expressWs = require('express-ws')(app)
-const PORT = process.env.PORT || 3000
+require('express-ws')(app)
 
-let counter = 0;
 app.use(express.static(path.join(__dirname, 'public')))
 
+function * getChar () {
+  while (true) {
+    yield 'X'
+    yield '0'
+  }
+}
+const charGen = getChar()
+
+let counter = 0
 const allClients = {}
-app.ws('/', function(ws, req) {
-  const id = counter++;
-  // console.log('ID: ', id)
+app.ws('/', function (ws, req) {
+  ws.send(JSON.stringify({
+    char: charGen.next().value,
+    type: 'assignChar'
+  }))
+  const id = counter++
   allClients[id] = ws
-  // console.log(`Active clients: ${Object.keys(allClients).length}`)
-  ws.on('message', function(msg) {
-    console.log('Message from client: ')
-    console.log(msg)
+  ws.on('message', function (msg) {
     for (const clientId in allClients) {
-      if (ws !== allClients[clientId])
-        allClients[clientId].send(msg)
+      if (ws !== allClients[clientId]) {
+        allClients[clientId].send(JSON.stringify({
+          type: 'move',
+          move: JSON.parse(msg)
+        }))
+      }
     }
   })
 
-  ws.on('close', function() {
+  ws.on('close', function () {
     delete allClients[id]
-    // console.log(`Active clients: ${Object.keys(allClients).length}`)
   })
 })
 
+const PORT = process.env.PORT || 3000
 app.listen(PORT, () => console.log(`server listening on port ${PORT}`))
