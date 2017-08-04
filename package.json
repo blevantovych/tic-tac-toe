@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "build": "browserify public/main.js -o public/bundle.js",
-    "watch": "watchify public/main.js -o public/bundle.js -v"
+    "build": "webpack public/main.js public/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -20,9 +19,9 @@
   },
   "homepage": "https://github.com/bodya17/tic-tac-toe#readme",
   "dependencies": {
-    "browserify": "^14.4.0",
+    "eslint-config-standard": "^10.2.1",
     "express": "^4.15.3",
     "mongoose": "^4.11.3",
-    "watchify": "^3.9.0"
+    "webpack": "^3.4.1"
   }
 }
