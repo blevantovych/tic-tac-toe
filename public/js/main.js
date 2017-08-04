@@ -1,5 +1,4 @@
-/* globals $ */
-
+/* globals WebSocket $ */
 import './bling'
 import { getSecondaryDiagonal, getMainDiagonal, getColumn } from './helpers'
 
@@ -8,6 +7,25 @@ const board = [
     ['', '', ''],
     ['', '', '']
 ]
+
+const ws = new WebSocket('ws://localhost:3000')
+window.ws = ws
+
+ws.onmessage = function(evt) {
+  const opponentMove = JSON.parse(evt.data)
+  const cell = $(`td[data-pos='${opponentMove.move}']`)[0]
+  cell.classList.add('player' + opponentMove.player)
+  setTimeout(() => {
+    cell.classList.add('active')
+  }, 100)
+  const [x, y] = opponentMove.move.split('')
+  board[x][y] = opponentMove.player
+  console.log()
+}
+
+ws.onclose = function() {
+  console.log('connection closed')
+}
 
 let moves = 0
 
@@ -64,8 +82,16 @@ $('td').on('click', function clickListener () {
     setTimeout(() => {
       this.classList.add('active')
     }, 100)
+
+    if (ws.readyState === 1) { // connection is open
+      ws.send(JSON.stringify({
+        player: char,
+        move: x+y
+      }))
+    }
     board[x][y] = char
     if (checkWin(board)) {
+      
       const crossClass = whereWinHappened(board)
       console.log(`Winner: ${char}`)
       const resultInfo = document.createElement('h3')
