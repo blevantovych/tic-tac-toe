@@ -10,3 +10,9 @@
 * time controll
 
 ### demo [here](https://bodya17.github.io/tic-tac-toe/index.html)
+
+### how to run
+* `npm i`
+* `cd ./public && npm i`
+* `npm build -- -w`
+* `npm start`

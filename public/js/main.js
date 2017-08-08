@@ -1,7 +1,9 @@
 /* globals WebSocket $ */
-import './bling'
+import './libraries/bling'
 import { getSecondaryDiagonal, getMainDiagonal, getColumn } from './helpers'
+import { createStoe } from './libraries/redux'
 
+console.log(createStoe)
 const board = [
     ['', '', ''],
     ['', '', ''],
@@ -11,6 +13,7 @@ const board = [
 const ws = new WebSocket('ws://localhost:3000')
 let char
 let allowedToMove
+let isWinner = false
 window.ws = ws
 
 function handleMove (moveData) {
@@ -25,6 +28,7 @@ function handleMove (moveData) {
   board[x][y] = moveData.player
   if (checkWin(board)) {
     informAboutWin(moveData.player)
+    isWinner = true
   } else {
     console.log('No winner yet')
   }
@@ -112,7 +116,7 @@ function informAboutWin (char) {
 
 $('td').on('click', function clickListener () {
   const [x, y] = this.getAttribute('data-pos').split('')
-  if (board[x][y] === '' && allowedToMove) {
+  if (board[x][y] === '' && allowedToMove && !isWinner) {
     allowedToMove = !allowedToMove
     // const char = ++moves % 2 ? 'X' : '0'
     this.classList.add('player' + char) // global char (server assigns it)
@@ -129,6 +133,8 @@ $('td').on('click', function clickListener () {
     board[x][y] = char
     if (checkWin(board)) {
       informAboutWin(char)
+      allowedToMove = false
+      isWinner = true
     } else {
       console.log('No winner yet')
     }
