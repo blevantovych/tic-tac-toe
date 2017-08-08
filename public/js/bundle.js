@@ -85,6 +85,7 @@ const board = [
 
 const ws = new WebSocket('ws://localhost:3000')
 let char
+let allowedToMove
 window.ws = ws
 
 function handleMove (moveData) {
@@ -111,8 +112,11 @@ ws.onmessage = function (event) {
   switch (data.type) {
     case 'assignChar':
       char = data.char
+      allowedToMove = data.allowedToMove
       break
-    case 'move': handleMove(data.move)
+    case 'move':
+      handleMove(data.move)
+      allowedToMove = !allowedToMove
       break
     default:
       break
@@ -183,7 +187,8 @@ function informAboutWin (char) {
 
 $('td').on('click', function clickListener () {
   const [x, y] = this.getAttribute('data-pos').split('')
-  if (board[x][y] === '') {
+  if (board[x][y] === '' && allowedToMove) {
+    allowedToMove = !allowedToMove
     // const char = ++moves % 2 ? 'X' : '0'
     this.classList.add('player' + char) // global char (server assigns it)
     setTimeout(() => {

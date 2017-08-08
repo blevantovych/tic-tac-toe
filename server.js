@@ -16,8 +16,10 @@ const charGen = getChar()
 let counter = 0
 const allClients = {}
 app.ws('/', function (ws, req) {
+  const char = charGen.next().value
   ws.send(JSON.stringify({
-    char: charGen.next().value,
+    char,
+    allowedToMove: char === 'X',
     type: 'assignChar'
   }))
   const id = counter++
