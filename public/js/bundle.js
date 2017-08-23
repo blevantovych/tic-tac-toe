@@ -714,6 +714,8 @@ const board = [
     ['', '', '']
 ]
 
+var moves = []
+
 const ws = new WebSocket('ws://localhost:3000')
 
 const initialStore = {
@@ -750,6 +752,7 @@ function handleMove (moveData) {
     cell.classList.add('active')
   }, 100)
   const [x, y] = moveData.move.split('')
+  moves.push(moveData.move)
   board[x][y] = moveData.player
   if (checkWin(board)) {
     informAboutWin(moveData.player)
@@ -848,27 +851,27 @@ $('td').on('click', function clickListener () {
 
     if (ws.readyState === 1) { // connection is open
       ws.send(JSON.stringify({
+        type: 'move',
         player: store.getState().char,
         move: x + y
       }))
+      moves.push(x + y)
     }
     board[x][y] = store.getState().char
     if (checkWin(board)) {
       informAboutWin(store.getState().char)
       store.dispatch({ type: 'ALLOW_TO_MOVE', allowedToMove: false })
       store.dispatch({ type: 'SET_WINNER', isWinner: true })
+      ws.send(JSON.stringify({
+        type: 'gameover',
+        moves
+      }))
     } else {
       console.log('No winner yet')
     }
   }
 })
 
-var x = 1;
-
-function foo5(x = 2, f = function() { return x; }) {
-  var x = 5;
-  console.log( f() )
-} 
 
 /***/ }),
 /* 8 */

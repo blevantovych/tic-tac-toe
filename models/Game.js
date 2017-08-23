@@ -8,8 +8,8 @@ const gameSchema = mongoose.Schema({
   playerX: { type: mongoose.Schema.Types.ObjectId, ref: 'Player' },
   playerO: { type: mongoose.Schema.Types.ObjectId, ref: 'Player' },
   winner: { type: mongoose.Schema.Types.ObjectId, ref: 'Player' },
-  createdAt: { type: Date },
-  moves: [ String ] // ex. ['CC', 'CR', ...]
+  createdAt: { type: Date, default: Date.now },
+  moves: [ String ] // ex. ['10', '11', ...] corresponds to coordinates on board
 })
 
 module.exports = mongoose.model('Game', gameSchema)
