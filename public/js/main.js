@@ -1,9 +1,8 @@
 /* globals WebSocket $ */
 import './libraries/bling'
 import { getSecondaryDiagonal, getMainDiagonal, getColumn } from './helpers'
-import { createStoe } from './libraries/redux'
+import { createStore } from 'redux'
 
-console.log(createStoe)
 const board = [
     ['', '', ''],
     ['', '', ''],
@@ -11,9 +10,30 @@ const board = [
 ]
 
 const ws = new WebSocket('ws://localhost:3000')
-let char
-let allowedToMove
-let isWinner = false
+
+const initialStore = {
+  char: '',
+  allowedToMove: false,
+  isWinner: false
+}
+
+function reducer (state = initialStore, action) {
+  switch (action.type) {
+    case 'CHANGE_CHAR':
+      return Object.assign({}, state, { char: action.char })
+    case 'ALLOW_TO_MOVE':
+      return Object.assign({}, state, { allowedToMove: action.allowedToMove })
+    case 'SET_WINNER':
+      return Object.assign({}, state, { isWinner: action.isWinner })
+    default:
+      return state
+  }
+}
+
+let store = createStore(reducer)
+store.subscribe(() =>
+  console.log('Store changed', store.getState())
+)
 window.ws = ws
 
 function handleMove (moveData) {
@@ -28,7 +48,7 @@ function handleMove (moveData) {
   board[x][y] = moveData.player
   if (checkWin(board)) {
     informAboutWin(moveData.player)
-    isWinner = true
+    store.dispatch({ type: 'SET_WINNER', isWinner: true })
   } else {
     console.log('No winner yet')
   }
@@ -40,12 +60,12 @@ ws.onmessage = function (event) {
   console.log(data)
   switch (data.type) {
     case 'assignChar':
-      char = data.char
-      allowedToMove = data.allowedToMove
+      store.dispatch({ type: 'CHANGE_CHAR', char: data.char })
+      store.dispatch({ type: 'ALLOW_TO_MOVE', allowedToMove: data.allowedToMove })
       break
     case 'move':
       handleMove(data.move)
-      allowedToMove = !allowedToMove
+      store.dispatch({ type: 'ALLOW_TO_MOVE', allowedToMove: !store.getState().allowedToMove })
       break
     default:
       break
@@ -55,8 +75,6 @@ ws.onmessage = function (event) {
 ws.onclose = function () {
   console.log('connection closed')
 }
-
-// let moves = 0
 
 function whereWinHappened (board) {
   if (allValuesTheSame(getMainDiagonal(board))) {
@@ -116,27 +134,33 @@ function informAboutWin (char) {
 
 $('td').on('click', function clickListener () {
   const [x, y] = this.getAttribute('data-pos').split('')
-  if (board[x][y] === '' && allowedToMove && !isWinner) {
-    allowedToMove = !allowedToMove
-    // const char = ++moves % 2 ? 'X' : '0'
-    this.classList.add('player' + char) // global char (server assigns it)
+  if (board[x][y] === '' && store.getState().allowedToMove && !store.getState().isWinner) {
+    store.dispatch({ type: 'ALLOW_TO_MOVE', allowedToMove: !store.getState().allowedToMove })
+    this.classList.add('player' + store.getState().char) // global char (server assigns it)
     setTimeout(() => {
       this.classList.add('active')
     }, 100)
 
     if (ws.readyState === 1) { // connection is open
       ws.send(JSON.stringify({
-        player: char,
+        player: store.getState().char,
         move: x + y
       }))
     }
-    board[x][y] = char
+    board[x][y] = store.getState().char
     if (checkWin(board)) {
-      informAboutWin(char)
-      allowedToMove = false
-      isWinner = true
+      informAboutWin(store.getState().char)
+      store.dispatch({ type: 'ALLOW_TO_MOVE', allowedToMove: false })
+      store.dispatch({ type: 'SET_WINNER', isWinner: true })
     } else {
       console.log('No winner yet')
     }
   }
 })
+
+var x = 1;
+
+function foo5(x = 2, f = function() { return x; }) {
+  var x = 5;
+  console.log( f() )
+} 

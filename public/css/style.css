@@ -1,5 +1,9 @@
 @import 'cross.css';
 
+body {
+    font: 50px / 50px "Cabin Sketch";
+}
+
 * {
     padding: 0;
     margin: 0;
@@ -25,6 +29,28 @@ table {
         position: relative;
     }
 
+    @keyframes cross-main {
+        from {
+            /*height: 0;*/
+            transform: scale(0) rotate(0deg);
+        }
+        to {
+            /*height: 100%;*/
+            transform: scale(1) rotate(-45deg);
+        }
+    }
+
+    @keyframes cross-sec {
+        from {
+            /*height: 0;*/
+            transform: scale(0) rotate(0deg);
+        }
+        to {
+            /*height: 100%;*/
+            transform: scale(1) rotate(45deg);
+        }
+    }
+
     td.playerX::after {
         content: '';
         width: 16%;
@@ -34,7 +60,9 @@ table {
         transition: all 1s ease-in;
         top: 0;
         left: 42%;
-        transform: rotate(-45deg);
+        /*transform: rotate(-45deg);*/
+        animation: cross-main 1s forwards;
+        /*animation-fill-mode: forwards;*/
         border-radius: 10px;
         background: red;
     }
@@ -45,11 +73,21 @@ table {
         display: block;
         position: absolute;
         height: 100%;
+        animation: cross-sec 1s forwards;
         top: 0;
         left: 42%;
-        transform: rotate(45deg);
+        /*transform: rotate(45deg);*/
         border-radius: 10px;
         background: red;
+    }
+
+    @keyframes circle {
+        from {
+            transform: scale(0);
+        }
+        to {
+            transform: scale(1);
+        }
     }
 
     td.player0::before {
@@ -57,6 +95,7 @@ table {
         content: '';
         width: 80%;
         height: 80%;
+        animation: circle 1s forwards;
         display: block;
         left: 10%;
         top: 10%;
